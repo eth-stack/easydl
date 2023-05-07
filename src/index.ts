@@ -492,7 +492,9 @@ class EasyDl extends EventEmitter {
         await rename(
           `${this.savedFilePath}.$$${id}$PART`,
           `${this.savedFilePath}.$$${id}`
-        );
+        ).catch(e => {
+          this.emit("error", e);
+        });
         this._onChunkCompleted(id);
         return;
       }
