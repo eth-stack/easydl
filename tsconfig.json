@@ -2,14 +2,15 @@
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
-    "sourceMap": true,
+    "sourceMap": false,
     "moduleResolution": "Node",
     "skipLibCheck": true,
     "strict": true,
     "isolatedModules": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "declaration": true
   },
   "include": ["src/**/*"]
 }
