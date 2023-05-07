@@ -6,8 +6,8 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "examples": "npm run build && ts-node examples/index.ts",
-    "build": "tsc .",
-    "postinstall": "npm run build"
+    "build": "tsc",
+    "prepack": "npm run build"
   },
   "files": [
     "lib"
