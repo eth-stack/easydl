@@ -2,15 +2,15 @@
   "name": "easydl",
   "version": "1.0.3",
   "description": "Easily download a file and save it to local disk. It supports resuming previously downloaded files, multi-connection/parallel downloads, and retry on fail out of the box!",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "examples": "npm run build && ts-node examples/index.ts",
     "build": "tsc",
     "prepack": "npm run build"
   },
   "files": [
-    "dist"
+    "lib"
   ],
   "author": "Andre Susanto <andre@susan.to>",
   "license": "MIT",
@@ -38,6 +38,6 @@
   "devDependencies": {
     "@types/node": "^14.0.4",
     "ts-node": "^8.10.1",
-    "typescript": "^3.9.3"
+    "typescript": "^4.9.5"
   }
 }

@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "target": "es2015",
-    "declaration": true,
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": true,
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
     "strict": true,
-    "outDir": "./dist"
+    "isolatedModules": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./lib"
   },
   "include": ["src/**/*"]
 }

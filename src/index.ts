@@ -7,6 +7,8 @@ import { delay } from "./helpers";
 import { fileStats, validate, rename } from "./fs";
 import Request, { followRedirect, requestHeader } from "./request";
 
+export * from "./utils";
+
 /** The configurable download options. */
 interface Options {
   /** Number of parallel connections */
@@ -687,7 +689,7 @@ class EasyDl extends EventEmitter {
   async wait(): Promise<boolean> {
     process.nextTick(this._start);
     if (this._destroyed) return this._done;
-    await new Promise((res, rej) => {
+    await new Promise<void>((res, rej) => {
       this.once("error", rej);
       this.once("close", res);
     });
@@ -712,4 +714,4 @@ class EasyDl extends EventEmitter {
   }
 }
 
-export = EasyDl;
+export default EasyDl;
