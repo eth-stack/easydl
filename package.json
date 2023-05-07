@@ -7,7 +7,7 @@
   "scripts": {
     "examples": "npm run build && ts-node examples/index.ts",
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepack": "npm run build"
   },
   "files": [
     "dist"
