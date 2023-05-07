@@ -10,7 +10,7 @@
     "prepack": "npm run build"
   },
   "files": [
-    "dist"
+    "lib"
   ],
   "author": "Andre Susanto <andre@susan.to>",
   "license": "MIT",
