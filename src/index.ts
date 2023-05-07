@@ -262,7 +262,7 @@ class EasyDl extends EventEmitter {
         maxRetry: 3,
         retryDelay: 2000,
         retryBackoff: 3000,
-        reportInterval: 2500,
+        reportInterval: 2500
       },
       options
     );
@@ -318,20 +318,20 @@ class EasyDl extends EventEmitter {
   private async _buildFile() {
     if (this._destroyed) return;
     try {
-      this.emit("build", {percentage: 0});
+      this.emit("build", { percentage: 0 });
       const dest = fs.createWriteStream(<string>this.savedFilePath);
       for (let i = 0; i < this._totalChunks; i += 1) {
         const fileName = `${this.savedFilePath}.$$${i}`;
         const source = fs.createReadStream(fileName);
         await new Promise((res, rej) => {
-          source.pipe(dest, {end: false});
+          source.pipe(dest, { end: false });
           source.on("error", rej);
           dest.on("error", rej);
           source.on("end", res);
         });
         source.close();
         this.emit("build", {
-          percentage: 100 * (i / this._totalChunks),
+          percentage: 100 * (i / this._totalChunks)
         });
       }
       for (let i = 0; i < this._totalChunks; i += 1) {
@@ -342,7 +342,7 @@ class EasyDl extends EventEmitter {
       this._done = true;
       this.emit("end");
       this.destroy();
-    } catch (err) {
+    } catch (err: any) {
       this.emit("error", err);
       this.destroy();
     }
@@ -401,7 +401,7 @@ class EasyDl extends EventEmitter {
       if (this.listenerCount("progress") > 0)
         this.emit("progress", {
           total: this.totalProgress,
-          details: this.partsProgress,
+          details: this.partsProgress
         });
     }
   }
@@ -411,14 +411,14 @@ class EasyDl extends EventEmitter {
       let opts = this._opts.httpOptions;
       if (opts && opts.headers && range) {
         const headers = Object.assign({}, opts.headers, {
-          Range: `bytes=${range[0]}-${range[1]}`,
+          Range: `bytes=${range[0]}-${range[1]}`
         });
         opts = Object.assign({}, opts, { headers });
       } else if (range) {
         opts = Object.assign({}, opts, {
           headers: {
-            Range: `bytes=${range[0]}-${range[1]}`,
-          },
+            Range: `bytes=${range[0]}-${range[1]}`
+          }
         });
       }
 
@@ -492,7 +492,7 @@ class EasyDl extends EventEmitter {
         await rename(
           `${this.savedFilePath}.$$${id}$PART`,
           `${this.savedFilePath}.$$${id}`
-        ).catch(e => {
+        ).catch((e) => {
           this.emit("error", e);
         });
         this._onChunkCompleted(id);
@@ -502,7 +502,7 @@ class EasyDl extends EventEmitter {
       this.emit("retry", {
         chunkId: id,
         attempt,
-        error,
+        error
       });
       await delay(
         <number>this._opts.retryDelay +
@@ -520,7 +520,7 @@ class EasyDl extends EventEmitter {
       this.partsProgress[i] = {
         speed: 0,
         bytes: 0,
-        percentage: 0,
+        percentage: 0
       };
 
       const stats = await fileStats(`${this.savedFilePath}.$$${i}`);
@@ -620,8 +620,8 @@ class EasyDl extends EventEmitter {
           {
             speed: 0,
             bytes: 0,
-            percentage: 0,
-          },
+            percentage: 0
+          }
         ];
         this._totalChunks = 1;
         this._download(0);
@@ -637,10 +637,10 @@ class EasyDl extends EventEmitter {
           parallel: this.parallel,
           resumable: this.resumable,
           headers: this.headers,
-          savedFilePath: this.savedFilePath,
+          savedFilePath: this.savedFilePath
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       this.emit("error", err);
       this.destroy();
     }
