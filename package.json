@@ -4,7 +4,6 @@
   "description": "Easily download a file and save it to local disk. It supports resuming previously downloaded files, multi-connection/parallel downloads, and retry on fail out of the box!",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "type": "module",
   "scripts": {
     "examples": "npm run build && ts-node examples/index.ts",
     "build": "tsc",
