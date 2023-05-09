@@ -2,7 +2,6 @@
 /// <reference types="node" />
 import * as http from "http";
 import { EventEmitter } from "events";
-export * from "./utils";
 /** The configurable download options. */
 interface Options {
     /** Number of parallel connections */
@@ -248,4 +247,4 @@ declare class EasyDl extends EventEmitter {
     start(): EasyDl;
     destroy(): void;
 }
-export default EasyDl;
+export = EasyDl;

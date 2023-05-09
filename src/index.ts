@@ -7,8 +7,6 @@ import { delay } from "./helpers";
 import { fileStats, validate, rename } from "./fs";
 import Request, { followRedirect, requestHeader } from "./request";
 
-export * from "./utils";
-
 /** The configurable download options. */
 interface Options {
   /** Number of parallel connections */
@@ -714,4 +712,4 @@ class EasyDl extends EventEmitter {
   }
 }
 
-export default EasyDl;
+export = EasyDl;
