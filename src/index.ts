@@ -320,6 +320,8 @@ class EasyDl extends EventEmitter {
     try {
       this.emit("build", { percentage: 0 });
       const dest = fs.createWriteStream(<string>this.savedFilePath);
+      dest.setMaxListeners(Math.max(this._totalChunks + 1, 10));
+
       for (let i = 0; i < this._totalChunks; i += 1) {
         const fileName = `${this.savedFilePath}.$$${i}`;
         const source = fs.createReadStream(fileName);
