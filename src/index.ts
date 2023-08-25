@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { EventEmitter } from "events";
 
-import { delay } from "./helpers";
+import { delay, safeRun } from "./helpers";
 import { fileStats, validate, rename } from "./fs";
 import Request, { followRedirect, requestHeader } from "./request";
 
@@ -16,7 +16,7 @@ interface Options {
    * -`new_file` will append a `(COPY)` name to the downloaded file until the file does not exist
    * -`ignore` will stop this current download
    */
-  existBehavior?: "overwrite" | "new_file" | "ignore";
+  existBehavior?: "overwrite" | "new_file" | "ignore" | "error";
   /** Whether `EasyDl` should follow HTTP redirection. */
   followRedirect?: boolean;
   /** Options passed to the http client */
@@ -290,6 +290,8 @@ class EasyDl extends EventEmitter {
         this.savedFilePath = path.join(loc.dir, `${loc.name}(COPY)${loc.ext}`);
       } else if (stats && this._opts.existBehavior === "ignore") {
         this.savedFilePath = null;
+      } else if (stats && this._opts.existBehavior === "error") {
+        throw new Error(`Destination ${this.savedFilePath} already exists.`);
       } else {
         break;
       }
@@ -317,21 +319,23 @@ class EasyDl extends EventEmitter {
 
   private async _buildFile() {
     if (this._destroyed) return;
+    this.emit("build", { percentage: 0 });
+    const dest = fs.createWriteStream(<string>this.savedFilePath);
     try {
-      this.emit("build", { percentage: 0 });
-      const dest = fs.createWriteStream(<string>this.savedFilePath);
-      dest.setMaxListeners(Math.max(this._totalChunks + 1, 10));
-
       for (let i = 0; i < this._totalChunks; i += 1) {
         const fileName = `${this.savedFilePath}.$$${i}`;
         const source = fs.createReadStream(fileName);
-        await new Promise((res, rej) => {
+        await new Promise<void>((res, rej) => {
           source.pipe(dest, { end: false });
           source.on("error", rej);
           dest.on("error", rej);
-          source.on("end", res);
+          source.on("end", () => {
+            dest.removeListener("error", rej);
+            res();
+          });
         });
-        source.close();
+
+        source.destroy();
         this.emit("build", {
           percentage: 100 * (i / this._totalChunks)
         });
@@ -340,12 +344,13 @@ class EasyDl extends EventEmitter {
         const fileName = `${this.savedFilePath}.$$${i}`;
         await new Promise((res) => fs.unlink(fileName, res));
       }
-      dest.close();
+      dest.destroy();
       this._done = true;
       this.emit("end");
       this.destroy();
-    } catch (err: any) {
-      this.emit("error", err);
+    } catch (err) {
+      safeRun(dest.destroy);
+      this.emit("error", err as Error);
       this.destroy();
     }
   }
@@ -492,6 +497,7 @@ class EasyDl extends EventEmitter {
         .pipe(dest)
         .wait();
 
+      safeRun(dest.destroy);
       if (this._destroyed) return;
       if (!error) {
         await rename(
@@ -645,8 +651,8 @@ class EasyDl extends EventEmitter {
           savedFilePath: this.savedFilePath
         });
       }
-    } catch (err: any) {
-      this.emit("error", err);
+    } catch (err) {
+      this.emit("error", err as Error);
       this.destroy();
     }
   }
