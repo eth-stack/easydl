@@ -1,7 +1,4 @@
 /// <reference types="node" />
-/// <reference types="node" />
-/// <reference types="node" />
-/// <reference types="node" />
 import * as http from "http";
 import { EventEmitter } from "events";
 interface RequestReadyData {

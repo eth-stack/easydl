@@ -1,5 +1,4 @@
 /// <reference types="node" />
-/// <reference types="node" />
 import * as http from "http";
 import { EventEmitter } from "events";
 /** The configurable download options. */
@@ -11,7 +10,7 @@ interface Options {
      * -`new_file` will append a `(COPY)` name to the downloaded file until the file does not exist
      * -`ignore` will stop this current download
      */
-    existBehavior?: "overwrite" | "new_file" | "ignore";
+    existBehavior?: "overwrite" | "new_file" | "ignore" | "error";
     /** Whether `EasyDl` should follow HTTP redirection. */
     followRedirect?: boolean;
     /** Options passed to the http client */
